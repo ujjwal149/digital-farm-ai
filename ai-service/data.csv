@@ -1,0 +1,9 @@
+temperature,healthStatus,label
+42,sick,high
+41,sick,high
+40,sick,medium
+39,healthy,medium
+38,healthy,low
+37,healthy,low
+43,sick,high
+36,healthy,low
