@@ -3,22 +3,22 @@ import PredictionHistory from "../models/PredictionHistory.js";
 import axios from "axios";
 
 
-// =========================
+
 // CREATE ANIMAL
-// =========================
+
 export const createAnimal = async (req, res) => {
   try {
     const animal = new Animal(req.body);
     const savedAnimal = await animal.save();
 
-    // 🔥 Call AI after creation
+    //  Call AI after creation
     try {
       const aiRes = await axios.post("http://127.0.0.1:8000/predict", {
         temperature: savedAnimal.temperature,
         healthStatus: savedAnimal.healthStatus,
       });
 
-      // 🧾 Save history
+      //  Save history
       await PredictionHistory.create({
         animalId: savedAnimal._id,
         temperature: savedAnimal.temperature,
@@ -39,9 +39,18 @@ export const createAnimal = async (req, res) => {
 };
 
 
-// =========================
+export const getHistory = async(_,res) => {
+  try{
+    const history = await  PredictionHistory.find().sort({createdAt:1});
+    res.json(history);
+  }catch(err){
+    res.status(500).json({error:err.message});
+  }
+};
+
+
 // GET ALL ANIMALS
-// =========================
+
 export const getAnimals = async (req, res) => {
   try {
     const animals = await Animal.find();
@@ -78,9 +87,9 @@ export const getAnimals = async (req, res) => {
 };
 
 
-// =========================
+
 // DELETE ANIMAL
-// =========================
+
 export const deleteAnimal = async (req, res) => {
   try {
     const deleted = await Animal.findByIdAndDelete(req.params.id);

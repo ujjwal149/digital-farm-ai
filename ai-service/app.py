@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import pandas as pd
 from pydantic import BaseModel
 import joblib
 
@@ -21,7 +22,12 @@ def predict(animal: Animal):
     hs = 1 if animal.healthStatus == "sick" else 0
 
     # Predict
-    pred = model.predict([[animal.temperature, hs]])[0]
+    input_data = pd.DataFrame([{
+    "temperature": animal.temperature,
+    "healthStatus": hs
+    }])
+
+    pred = model.predict(input_data)[0]
 
     if pred == 2:
         return {"risk": "High Risk 🚨", "score": 90}
